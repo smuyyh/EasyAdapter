@@ -1,10 +1,11 @@
-package com.yuyh.easyadapter.abslistview;
+package com.yuyh.easyadapter.recyclerview;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
 import com.yuyh.easyadapter.DataHelper;
 
@@ -14,71 +15,57 @@ import java.util.List;
  * @author yuyh.
  * @date 2016/7/21.
  */
-public abstract class EasyLVAdapter<T> extends BaseAdapter implements DataHelper<T> {
+public abstract class EasyRVAdapter<T> extends RecyclerView.Adapter<EasyRVHolder> implements DataHelper<T> {
 
     protected Context mContext;
     protected List<T> mList;
     protected int[] layoutIds;
     protected LayoutInflater mLInflater;
 
-    protected EasyLVHolder holder = new EasyLVHolder();
+    private SparseArray<View> mConvertViews = new SparseArray<>();
 
-    public EasyLVAdapter(Context context, List<T> list, int... layoutIds) {
+    public EasyRVAdapter(Context context, List<T> list, int[] layoutIds) {
         this.mContext = context;
         this.mList = list;
         this.layoutIds = layoutIds;
         this.mLInflater = LayoutInflater.from(mContext);
     }
 
-    public EasyLVAdapter(Context context, List<T> list) {
-        this.mContext = context;
-        this.mList = list;
-        this.mLInflater = LayoutInflater.from(mContext);
+    @Override
+    public EasyRVHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType < 0 || viewType > layoutIds.length) {
+            throw new ArrayIndexOutOfBoundsException("layoutIndex");
+        }
+        if (layoutIds.length == 0) {
+            throw new IllegalArgumentException("not layoutId");
+        }
+        int layoutId = layoutIds[viewType];
+        View view = mConvertViews.get(layoutId);
+        if (view == null) {
+            view = mLInflater.inflate(layoutId, parent, false);
+        }
+        EasyRVHolder viewHolder = (EasyRVHolder) view.getTag();
+        if (viewHolder == null || viewHolder.getLayoutId() != layoutId) {
+            viewHolder = new EasyRVHolder(mContext, layoutId, view);
+            return viewHolder;
+        }
+        return viewHolder;
     }
 
+    @Override
+    public void onBindViewHolder(EasyRVHolder holder, int position) {
+        final T item = mList.get(position);
+        onBindData(holder, position, item);
+    }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return mList == null ? 0 : mList.size();
     }
 
     @Override
-    public Object getItem(int position) {
-        return mList == null ? null : mList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        int layoutId = getViewCheckLayoutId(position);
-        holder = holder.get(mContext, position, convertView, parent, layoutId);
-        convert(holder, position, mList.get(position));
-        return holder.getConvertView(layoutId);
-    }
-
-    private int getViewCheckLayoutId(int position) {
-        int layoutId;
-        if (layoutIds == null || layoutIds.length == 0) {
-            layoutId = getLayoutId(position, mList.get(position));
-        } else {
-            layoutId = layoutIds[getLayoutIndex(position, mList.get(position))];
-        }
-        return layoutId;
-    }
-
-    /**
-     * 若构造函数没有指定layoutIds, 则必须重写该方法
-     *
-     * @param position
-     * @param item
-     * @return layoutId
-     */
-    public int getLayoutId(int position, T item) {
-        return 0;
+    public int getItemViewType(int position) {
+        return getLayoutIndex(position, mList.get(position));
     }
 
     /**
@@ -92,7 +79,7 @@ public abstract class EasyLVAdapter<T> extends BaseAdapter implements DataHelper
         return 0;
     }
 
-    public abstract <BVH extends EasyLVHolder> void convert(BVH holder, int position, T t);
+    protected abstract void onBindData(EasyRVHolder viewHolder, int position, T item);
 
     @Override
     public boolean addAll(List<T> list) {

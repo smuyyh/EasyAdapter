@@ -1,4 +1,4 @@
-package com.yuyh.easyadapter.abslistview;
+package com.yuyh.easyadapter.recyclerview;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,10 +6,9 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.Checkable;
 import android.widget.ImageView;
@@ -17,181 +16,144 @@ import android.widget.TextView;
 
 import com.yuyh.easyadapter.ViewHelper;
 
-/**
- * @author yuyh.
- * @date 2016/7/21.
- */
-public class EasyLVHolder implements ViewHelper.AbsListView<EasyLVHolder> {
+public class EasyRVHolder extends RecyclerView.ViewHolder implements ViewHelper.RecyclerView<EasyRVHolder> {
 
-    /**
-     * findViewById后保存View集合
-     */
     private SparseArray<View> mViews = new SparseArray<>();
-    private SparseArray<View> mConvertViews = new SparseArray<>();
 
     private View mConvertView;
-    protected int mPosition;
-    protected int mLayoutId;
+    private int mLayoutId;
     protected Context mContext;
 
-    protected EasyLVHolder(Context context, int position, ViewGroup parent, int layoutId) {
-        this.mConvertView = mConvertViews.get(layoutId);
-        this.mPosition = position;
+    public EasyRVHolder(Context context, int layoutId, View itemView) {
+        super(itemView);
         this.mContext = context;
         this.mLayoutId = layoutId;
-        if (mConvertView == null) {
-            mConvertView = LayoutInflater.from(context).inflate(layoutId, parent, false);
-            mConvertViews.put(layoutId, mConvertView);
-            mConvertView.setTag(this);
-        }
+        mConvertView = itemView;
+        mConvertView.setTag(this);
     }
 
-    protected EasyLVHolder() {
-    }
-
-    public <BVH extends EasyLVHolder> BVH get(Context context, int position, View convertView, ViewGroup parent, int layoutId) {
-        if (convertView == null) {
-            return (BVH) new EasyLVHolder(context, position, parent, layoutId);
-        } else {
-            EasyLVHolder holder = (EasyLVHolder) convertView.getTag();
-            if (holder.mLayoutId != layoutId) {
-                return (BVH) new EasyLVHolder(context, position, parent, layoutId);
-            }
-            holder.setPosition(position);
-            return (BVH) holder;
-        }
-    }
-
-    public View getConvertView() {
-        return mConvertViews.valueAt(0);
-    }
-
-    public View getConvertView(int layoutId) {
-        return mConvertViews.get(layoutId);
-    }
-
-    public <V extends View> V getView(int viewId) {
+    public <R extends View> R getView(int viewId) {
         View view = mViews.get(viewId);
         if (view == null) {
             view = mConvertView.findViewById(viewId);
             mViews.put(viewId, view);
         }
-        return (V) view;
-    }
-
-    public void setPosition(int mPosition) {
-        this.mPosition = mPosition;
+        return (R) view;
     }
 
     public int getLayoutId() {
         return mLayoutId;
     }
 
+    public View getItemView() {
+        return mConvertView;
+    }
+
     @Override
-    public EasyLVHolder setText(int viewId, String value) {
+    public EasyRVHolder setText(int viewId, String value) {
         TextView view = getView(viewId);
         view.setText(value);
         return this;
     }
 
     @Override
-    public EasyLVHolder setTextColor(int viewId, int color) {
+    public EasyRVHolder setTextColor(int viewId, int color) {
         TextView view = getView(viewId);
         view.setTextColor(color);
         return this;
     }
 
     @Override
-    public EasyLVHolder setTextColorRes(int viewId, int colorRes) {
+    public EasyRVHolder setTextColorRes(int viewId, int colorRes) {
         TextView view = getView(viewId);
         view.setTextColor(mContext.getResources().getColor(colorRes, null));
         return this;
     }
 
     @Override
-    public EasyLVHolder setImageResource(int viewId, int imgResId) {
+    public EasyRVHolder setImageResource(int viewId, int imgResId) {
         ImageView view = getView(viewId);
         view.setImageResource(imgResId);
         return this;
     }
 
     @Override
-    public EasyLVHolder setBackgroundColor(int viewId, int color) {
+    public EasyRVHolder setBackgroundColor(int viewId, int color) {
         View view = getView(viewId);
         view.setBackgroundColor(color);
         return this;
     }
 
     @Override
-    public EasyLVHolder setBackgroundColorRes(int viewId, int colorRes) {
+    public EasyRVHolder setBackgroundColorRes(int viewId, int colorRes) {
         View view = getView(viewId);
         view.setBackgroundResource(colorRes);
         return this;
     }
 
     @Override
-    public EasyLVHolder setImageDrawable(int viewId, Drawable drawable) {
+    public EasyRVHolder setImageDrawable(int viewId, Drawable drawable) {
         ImageView view = getView(viewId);
         view.setImageDrawable(drawable);
         return this;
     }
 
     @Override
-    public EasyLVHolder setImageDrawableRes(int viewId, int drawableRes) {
+    public EasyRVHolder setImageDrawableRes(int viewId, int drawableRes) {
         Drawable drawable = mContext.getResources().getDrawable(drawableRes, null);
         return setImageDrawable(viewId, drawable);
     }
 
     @Override
-    public EasyLVHolder setImageUrl(int viewId, String imgUrl) {
+    public EasyRVHolder setImageUrl(int viewId, String imgUrl) {
         // TODO: Use Glide/Picasso/ImageLoader/Fresco
         return this;
     }
 
     @Override
-    public EasyLVHolder setImageBitmap(int viewId, Bitmap imgBitmap) {
+    public EasyRVHolder setImageBitmap(int viewId, Bitmap imgBitmap) {
         ImageView view = getView(viewId);
         view.setImageBitmap(imgBitmap);
         return this;
     }
 
     @Override
-    public EasyLVHolder setVisible(int viewId, boolean visible) {
+    public EasyRVHolder setVisible(int viewId, boolean visible) {
         View view = getView(viewId);
         view.setVisibility(visible ? View.VISIBLE : View.GONE);
         return this;
     }
 
     @Override
-    public EasyLVHolder setVisible(int viewId, int visible) {
+    public EasyRVHolder setVisible(int viewId, int visible) {
         View view = getView(viewId);
         view.setVisibility(visible);
         return this;
     }
 
     @Override
-    public EasyLVHolder setTag(int viewId, Object tag) {
+    public EasyRVHolder setTag(int viewId, Object tag) {
         View view = getView(viewId);
         view.setTag(tag);
         return this;
     }
 
     @Override
-    public EasyLVHolder setTag(int viewId, int key, Object tag) {
+    public EasyRVHolder setTag(int viewId, int key, Object tag) {
         View view = getView(viewId);
         view.setTag(key, tag);
         return this;
     }
 
     @Override
-    public EasyLVHolder setChecked(int viewId, boolean checked) {
+    public EasyRVHolder setChecked(int viewId, boolean checked) {
         Checkable view = getView(viewId);
         view.setChecked(checked);
         return this;
     }
 
     @Override
-    public EasyLVHolder setAlpha(int viewId, float value) {
+    public EasyRVHolder setAlpha(int viewId, float value) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             getView(viewId).setAlpha(value);
         } else {
@@ -204,7 +166,7 @@ public class EasyLVHolder implements ViewHelper.AbsListView<EasyLVHolder> {
     }
 
     @Override
-    public EasyLVHolder setTypeface(int viewId, Typeface typeface) {
+    public EasyRVHolder setTypeface(int viewId, Typeface typeface) {
         TextView view = getView(viewId);
         view.setTypeface(typeface);
         view.setPaintFlags(view.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);
@@ -212,7 +174,7 @@ public class EasyLVHolder implements ViewHelper.AbsListView<EasyLVHolder> {
     }
 
     @Override
-    public EasyLVHolder setTypeface(Typeface typeface, int... viewIds) {
+    public EasyRVHolder setTypeface(Typeface typeface, int... viewIds) {
         for (int viewId : viewIds) {
             TextView view = getView(viewId);
             view.setTypeface(typeface);
@@ -222,7 +184,7 @@ public class EasyLVHolder implements ViewHelper.AbsListView<EasyLVHolder> {
     }
 
     @Override
-    public EasyLVHolder setOnClickListener(int viewId, View.OnClickListener listener) {
+    public EasyRVHolder setOnClickListener(int viewId, View.OnClickListener listener) {
         View view = getView(viewId);
         view.setOnClickListener(listener);
         return this;
