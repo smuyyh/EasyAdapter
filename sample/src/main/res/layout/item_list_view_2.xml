@@ -18,5 +18,11 @@
         android:layout_marginLeft="20dp"
         android:src="@mipmap/ic_launcher" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="这是样式二"
+        android:layout_marginLeft="20dp"/>
+
 
 </LinearLayout>

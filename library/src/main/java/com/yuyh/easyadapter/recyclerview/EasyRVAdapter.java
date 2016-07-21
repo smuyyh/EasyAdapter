@@ -24,7 +24,7 @@ public abstract class EasyRVAdapter<T> extends RecyclerView.Adapter<EasyRVHolder
 
     private SparseArray<View> mConvertViews = new SparseArray<>();
 
-    public EasyRVAdapter(Context context, List<T> list, int[] layoutIds) {
+    public EasyRVAdapter(Context context, List<T> list, int... layoutIds) {
         this.mContext = context;
         this.mList = list;
         this.layoutIds = layoutIds;
