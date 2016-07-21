@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.yuyh.easyadapter.DataHelper;
+import com.yuyh.easyadapter.helper.DataHelper;
 
 import java.util.List;
 
@@ -92,7 +92,7 @@ public abstract class EasyLVAdapter<T> extends BaseAdapter implements DataHelper
         return 0;
     }
 
-    public abstract <BVH extends EasyLVHolder> void convert(BVH holder, int position, T t);
+    public abstract void convert(EasyLVHolder holder, int position, T t);
 
     @Override
     public boolean addAll(List<T> list) {
@@ -127,7 +127,7 @@ public abstract class EasyLVAdapter<T> extends BaseAdapter implements DataHelper
     }
 
     @Override
-    public boolean contains(Object data) {
+    public boolean contains(T data) {
         return mList.contains(data);
     }
 

@@ -14,7 +14,7 @@ import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.yuyh.easyadapter.ViewHelper;
+import com.yuyh.easyadapter.helper.ViewHelper;
 
 public class EasyRVHolder extends RecyclerView.ViewHolder implements ViewHelper.RecyclerView<EasyRVHolder> {
 
@@ -32,21 +32,31 @@ public class EasyRVHolder extends RecyclerView.ViewHolder implements ViewHelper.
         mConvertView.setTag(this);
     }
 
-    public <R extends View> R getView(int viewId) {
+    public <V extends View> V getView(int viewId) {
         View view = mViews.get(viewId);
         if (view == null) {
             view = mConvertView.findViewById(viewId);
             mViews.put(viewId, view);
         }
-        return (R) view;
+        return (V) view;
     }
 
     public int getLayoutId() {
         return mLayoutId;
     }
 
+    /**
+     * 获取item布局
+     *
+     * @return
+     */
     public View getItemView() {
         return mConvertView;
+    }
+
+    public EasyRVHolder setOnItemViewClickListener(View.OnClickListener listener){
+        mConvertView.setOnClickListener(listener);
+        return this;
     }
 
     @Override

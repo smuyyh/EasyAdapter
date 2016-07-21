@@ -1,4 +1,4 @@
-package com.yuyh.easyadapter;
+package com.yuyh.easyadapter.helper;
 
 import android.graphics.Bitmap;
 import android.graphics.Typeface;

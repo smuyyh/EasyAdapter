@@ -15,7 +15,7 @@ import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.yuyh.easyadapter.ViewHelper;
+import com.yuyh.easyadapter.helper.ViewHelper;
 
 /**
  * @author yuyh.
@@ -62,6 +62,10 @@ public class EasyLVHolder implements ViewHelper.AbsListView<EasyLVHolder> {
         }
     }
 
+    /**
+     * 获取item布局
+     * @return
+     */
     public View getConvertView() {
         return mConvertViews.valueAt(0);
     }

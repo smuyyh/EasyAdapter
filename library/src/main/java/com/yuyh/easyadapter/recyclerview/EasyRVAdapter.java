@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.yuyh.easyadapter.DataHelper;
+import com.yuyh.easyadapter.helper.DataHelper;
 
 import java.util.List;
 
@@ -114,7 +114,7 @@ public abstract class EasyRVAdapter<T> extends RecyclerView.Adapter<EasyRVHolder
     }
 
     @Override
-    public boolean contains(Object data) {
+    public boolean contains(T data) {
         return mList.contains(data);
     }
 

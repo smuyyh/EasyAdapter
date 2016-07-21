@@ -1,4 +1,4 @@
-package com.yuyh.easyadapter;
+package com.yuyh.easyadapter.helper;
 
 import java.util.List;
 
