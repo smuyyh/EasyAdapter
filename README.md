@@ -37,11 +37,11 @@ public class ListViewAdapter extends EasyLVAdapter<Bean> {
     }
 }
 ```
-AbsListView的Adapter，重写EasyLVAdapter，在convert中完成数据与事件的绑定，并且可以指定多种样式的item布局，通过重写getLayoutIndex方法，来指定position位置的item引用的布局。
+AbsListView的Adapter，继承EasyLVAdapter，重写convert方法，完成数据与事件的绑定，并且可以指定多种样式的item布局，通过重写getLayoutIndex方法，来指定position位置的item引用的布局。
 
 EasyLVHolder中封装了很多通用的方法，比如setText/setImageDrawable/setOnClickListener等等。也可直接通过getConvertView取出item布局，或者通过getView(int id)取出某个控件，进行相应操作。
 
-RecyclerView的Adapter，需重写EasyRVAdapter，用法与EasyLVAdapter类似。
+RecyclerView的Adapter，需继承EasyRVAdapter，用法与EasyLVAdapter类似。
 
 ### 调用
 ```java
