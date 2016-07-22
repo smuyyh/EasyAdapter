@@ -1,5 +1,10 @@
 # EasyAdapter
-Android万能适配器，通吃所有的AbsListView、RecyclerView。
+#####Android万能适配器，通吃所有的AbsListView、RecyclerView。
+
+### 添加依赖
+```
+compile 'com.yuyh.easyadapter:library:1.0.0'
+```
 
 ### 用法
 ```java
@@ -18,11 +23,14 @@ public class ListViewAdapter extends EasyLVAdapter<Bean> {
 
     @Override
     public void convert(EasyLVHolder holder, int position, final Bean bean) {
-        holder.setText(R.id.tv, bean.name);
+        holder.setText(R.id.tv, bean.name)
+              .setText(R.id.tv2, bean.name2)
+              .setImageResource(R.id.img, context.getResource().getDrawable(bean.imgRes));
     }
 
     @Override
     public int getLayoutIndex(int position, Bean item) {
+        // 若需多样式布局，则重写该方法
         if (position % 2 == 0)
             return 1;
         else return 0;
@@ -39,4 +47,30 @@ RecyclerView的Adapter，需重写EasyRVAdapter，用法与EasyLVAdapter类似�
 ```java
 ListView lv = (ListView) findViewById(R.id.lv);
 lv.setAdapter(new ListViewAdapter(this, list, R.layout.item_list_view_1, R.layout.item_list_view_2));
+```
+
+### 数据操作
+EasyXXAdapter提供以下方法，便于对List数据的增删改。
+```java
+    boolean addAll(List<T> list);
+
+    boolean addAll(int position, List<T> list);
+
+    void add(T data);
+
+    void add(int position, T data);
+
+    void clear();
+
+    boolean contains(T data);
+
+    T getData(int index);
+
+    void modify(T oldData, T newData);
+
+    void modify(int index, T newData);
+
+    boolean remove(T data);
+
+    void remove(int index);
 ```
