@@ -22,9 +22,9 @@ public abstract class EasyRVAdapter<T> extends RecyclerView.Adapter<EasyRVHolder
     /****
      * 头部相关
      */
-    public static final int TYPE_HEADER = -1;
-    private View mHeaderView;
-    private int headerViewId = -1;
+    public static final int TYPE_HEADER = -1, TYPE_FOOTER = -2;
+    private View mHeaderView, mFooterView;
+    private int headerViewId = -1, footerViewId = -2;
 
     protected Context mContext;
     protected List<T> mList;
@@ -44,6 +44,9 @@ public abstract class EasyRVAdapter<T> extends RecyclerView.Adapter<EasyRVHolder
     public EasyRVHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if(mHeaderView != null && viewType == TYPE_HEADER){
             return new EasyRVHolder(mContext, headerViewId, mHeaderView);
+        }
+        if(mHeaderView != null && viewType == TYPE_FOOTER){
+            return new EasyRVHolder(mContext, footerViewId, mFooterView);
         }
         if (viewType < 0 || viewType > layoutIds.length) {
             throw new ArrayIndexOutOfBoundsException("layoutIndex");
@@ -67,6 +70,7 @@ public abstract class EasyRVAdapter<T> extends RecyclerView.Adapter<EasyRVHolder
     @Override
     public void onBindViewHolder(EasyRVHolder holder, int position) {
         if(getItemViewType(position) == TYPE_HEADER) return;
+        if(getItemViewType(position) == TYPE_FOOTER) return;
         position = getPosition(position);
         final T item = mList.get(position);
         onBindData(holder, position, item);
@@ -74,8 +78,10 @@ public abstract class EasyRVAdapter<T> extends RecyclerView.Adapter<EasyRVHolder
 
     @Override
     public int getItemCount() {
-        if(mHeaderView == null){
+        if(mHeaderView == null && mFooterView == null){
             return mList == null ? 0 : mList.size();
+        } else if(mHeaderView!=null && mFooterView!=null){
+            return mList == null ? 2 : mList.size() + 2;
         }else{
             return mList == null ? 1 : mList.size()+1;
         }
@@ -85,6 +91,9 @@ public abstract class EasyRVAdapter<T> extends RecyclerView.Adapter<EasyRVHolder
     public int getItemViewType(int position) {
         if(position == 0 && mHeaderView != null) {
             return TYPE_HEADER;
+        }
+        if(position == getItemCount() - 1 && mFooterView != null){
+            return TYPE_FOOTER;
         }
         position = getPosition(position);
         return getLayoutIndex(position, mList.get(position));
@@ -103,7 +112,7 @@ public abstract class EasyRVAdapter<T> extends RecyclerView.Adapter<EasyRVHolder
             gridManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
-                    return getItemViewType(position) == TYPE_HEADER  ? gridManager.getSpanCount() : 1;
+                    return getItemViewType(position) == TYPE_HEADER || getItemViewType(position) == TYPE_FOOTER  ? gridManager.getSpanCount() : 1;
                 }
             });
         }
@@ -124,7 +133,9 @@ public abstract class EasyRVAdapter<T> extends RecyclerView.Adapter<EasyRVHolder
     }
 
     private int getPosition(int position){
-        position = mHeaderView == null ? position : position - 1;
+        if(mHeaderView != null || mFooterView != null){
+            position = position - 1;
+        }
         return position;
     }
 
@@ -149,13 +160,21 @@ public abstract class EasyRVAdapter<T> extends RecyclerView.Adapter<EasyRVHolder
         notifyItemInserted(0);
         return mHeaderView;
     }
-
+    public View setFooterView(int footerViewId){
+        mFooterView = mLInflater.inflate(footerViewId,null);
+        this.footerViewId = footerViewId;
+        notifyItemInserted(mList.size());
+        return mFooterView;
+    }
     /****
      * 获取头部
      * @return
      */
     public View getHeaderView() {
         return mHeaderView;
+    }
+    public View getFooterView(){
+        return mFooterView;
     }
 
     protected abstract void onBindData(EasyRVHolder viewHolder, int position, T item);
