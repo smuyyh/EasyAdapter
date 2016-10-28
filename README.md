@@ -3,7 +3,7 @@
 
 ### 添加依赖
 ```
-compile 'com.yuyh.easyadapter:library:1.0.0'
+compile 'com.yuyh.easyadapter:library:1.1.0'
 ```
 
 ### 用法
