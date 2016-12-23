@@ -45,7 +45,7 @@ public abstract class EasyRVAdapter<T> extends RecyclerView.Adapter<EasyRVHolder
         if(mHeaderView != null && viewType == TYPE_HEADER){
             return new EasyRVHolder(mContext, headerViewId, mHeaderView);
         }
-        if(mHeaderView != null && viewType == TYPE_FOOTER){
+        if(mFooterView != null && viewType == TYPE_FOOTER){
             return new EasyRVHolder(mContext, footerViewId, mFooterView);
         }
         if (viewType < 0 || viewType > layoutIds.length) {
