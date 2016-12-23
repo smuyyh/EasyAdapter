@@ -41,7 +41,7 @@ AbsListView的Adapter，继承EasyLVAdapter，重写convert方法，完成数据
 
 EasyLVHolder中封装了很多通用的方法，比如setText/setImageDrawable/setOnClickListener等等。也可直接通过getConvertView取出item布局，或者通过getView(int id)取出某个控件，进行相应操作。
 
-RecyclerView的Adapter，需继承EasyRVAdapter，用法与EasyLVAdapter类似。
+RecyclerView的Adapter，需继承EasyRVAdapter或者BaseRVAdapter(包含点击事件与长按事件：setClick方法)，用法与EasyLVAdapter类似。
 
 ### 调用
 ```java
