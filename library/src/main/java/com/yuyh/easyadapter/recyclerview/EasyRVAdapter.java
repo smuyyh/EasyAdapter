@@ -174,7 +174,11 @@ public abstract class EasyRVAdapter<T> extends RecyclerView.Adapter<EasyRVHolder
     }
 
     public View setFooterView(int footerViewId) {
-        mFooterView = mLInflater.inflate(footerViewId, null);
+        return setFooterView(footerViewId, null);
+    }
+
+    public View setFooterView(int footerViewId, ViewGroup parent) {
+        mFooterView = mLInflater.inflate(footerViewId, parent, false);
         this.footerViewId = footerViewId;
         notifyItemInserted(mList.size());
         return mFooterView;
