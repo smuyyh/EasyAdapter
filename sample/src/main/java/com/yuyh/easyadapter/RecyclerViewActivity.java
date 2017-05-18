@@ -66,5 +66,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
         rv.setItemAnimator(new DefaultItemAnimator());
         rv.addItemDecoration(new GridItemDecoration(this, true, true));
         rv.setHasFixedSize(true);
+
+        //mAdapter.setHeaderView(R.layout.item_header, rv);
     }
 }
