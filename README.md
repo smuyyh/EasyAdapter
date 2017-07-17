@@ -1,9 +1,9 @@
 # EasyAdapter
-#####Android万能适配器，通吃所有的AbsListView、RecyclerView。
+#### Android万能适配器，通吃所有的AbsListView、RecyclerView。
 
 ### 添加依赖
 ```
-compile 'com.yuyh.easyadapter:library:1.1.4'
+compile 'com.yuyh.easyadapter:library:1.1.5'
 ```
 
 ### 用法
