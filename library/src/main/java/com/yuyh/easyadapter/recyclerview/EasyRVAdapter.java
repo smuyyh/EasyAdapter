@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yuyh.easyadapter.helper.DataHelper;
+import com.yuyh.library.easyadapter.R;
 
 import java.util.List;
 
@@ -32,6 +33,9 @@ public abstract class EasyRVAdapter<T> extends RecyclerView.Adapter<EasyRVHolder
     protected LayoutInflater mLInflater;
 
     private SparseArray<View> mConvertViews = new SparseArray<>();
+
+    private OnItemClickListener<T> itemClickListener;
+    private OnItemLongClickListener<T> itemLongClickListener;
 
     public EasyRVAdapter(Context context, List<T> list, int... layoutIds) {
         this.mContext = context;
@@ -69,10 +73,20 @@ public abstract class EasyRVAdapter<T> extends RecyclerView.Adapter<EasyRVHolder
 
     @Override
     public void onBindViewHolder(EasyRVHolder holder, int position) {
-        if (getItemViewType(position) == TYPE_HEADER) return;
-        if (getItemViewType(position) == TYPE_FOOTER) return;
+        if (getItemViewType(position) == TYPE_HEADER)
+            return;
+        if (getItemViewType(position) == TYPE_FOOTER)
+            return;
+
         position = getPosition(position);
         final T item = mList.get(position);
+
+        holder.getItemView().setTag(R.id.tag_position, position);
+        holder.getItemView().setTag(R.id.tag_item, item);
+
+        holder.getItemView().setOnClickListener(clickListener);
+        holder.getItemView().setOnLongClickListener(longClickListener);
+
         onBindData(holder, position, item);
     }
 
@@ -270,5 +284,56 @@ public abstract class EasyRVAdapter<T> extends RecyclerView.Adapter<EasyRVHolder
     public void remove(int index) {
         mList.remove(index);
         notifyDataSetChanged();
+    }
+
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            int position = (int) v.getTag(R.id.tag_position);
+            T item = (T) v.getTag(R.id.tag_item);
+
+            if (itemClickListener != null) {
+                itemClickListener.onItemClick(v, position, item);
+            }
+        }
+    };
+
+    private View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+
+            int position = (int) v.getTag(R.id.tag_position);
+            T item = (T) v.getTag(R.id.tag_item);
+
+            if (itemLongClickListener != null) {
+                itemLongClickListener.onItemLongClick(v, position, item);
+            }
+
+            return true;
+        }
+    };
+
+    public void setOnItemClickListener(OnItemClickListener<T> itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener<T> itemLongClickListener) {
+        this.itemLongClickListener = itemLongClickListener;
+    }
+
+    /****
+     * RecyclerView Item 的点击事件
+     * @param <T>
+     */
+    public interface OnItemClickListener<T> {
+        void onItemClick(View view, int position, T item);
+    }
+
+    /****
+     * RecyclerView Item 的长按事件
+     * @param <T>
+     */
+    public interface OnItemLongClickListener<T> {
+        void onItemLongClick(View view, int position, T item);
     }
 }

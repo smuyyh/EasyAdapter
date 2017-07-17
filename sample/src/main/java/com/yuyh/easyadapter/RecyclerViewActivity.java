@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.yuyh.easyadapter.recyclerview.BaseRVAdapter;
+import com.yuyh.easyadapter.recyclerview.EasyRVAdapter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,18 +49,10 @@ public class RecyclerViewActivity extends AppCompatActivity {
         View mFooter = mAdapter.setFooterView(R.layout.item_header);
         TextView tvFooterName = (TextView) mFooter.findViewById(R.id.tv_name);
         tvFooterName.setText("这是尾部");
-        mAdapter.setClick(new BaseRVAdapter.OnItemClick<Bean>() {
+        mAdapter.setOnItemClickListener(new EasyRVAdapter.OnItemClickListener<Bean>() {
             @Override
-            public void onItemClick(View v, int vId, int position, Bean item) {
-                // item 的点击事件
+            public void onItemClick(View v, int position, Bean item) {
                 Toast.makeText(RecyclerViewActivity.this, "position是：" + position +  "-->" + "点击了："+item.name, Toast.LENGTH_LONG).show();
-            }
-        });
-        mAdapter.setClick(new BaseRVAdapter.OnItemLongClick<Bean>() {
-            @Override
-            public void onItemLongClick(View v, int vId, int position, Bean item) {
-                // item 的长按事件
-                Toast.makeText(RecyclerViewActivity.this, "position是：" + position +  "-->" + "长按了："+item.name, Toast.LENGTH_LONG).show();
             }
         });
         rv.setItemAnimator(new DefaultItemAnimator());
