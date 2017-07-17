@@ -74,9 +74,9 @@ EasyXXAdapter提供以下方法，便于对List数据的增删改。
 
     void remove(int index);
 
-    // 点击事件
+    // RV 独有 点击事件
     void setOnItemClickListener(OnItemClickListener<T> itemClickListener);
 
-    // 长按事件
+    // RV 独有 长按事件
     void setOnItemLongClickListener(OnItemLongClickListener<T> itemLongClickListener);
 ```
