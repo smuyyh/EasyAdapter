@@ -12,13 +12,8 @@ compile 'com.yuyh.easyadapter:library:1.2.0'
 #### step1
 
 ```java
-package com.yuyh.easyadapter;
 
-import android.content.Context;
-import com.yuyh.easyadapter.abslistview.EasyLVAdapter;
-import com.yuyh.easyadapter.abslistview.EasyLVHolder;
-import java.util.List;
-
+// ListView
 public class ListViewAdapter extends EasyLVAdapter<Bean> {
 
     public ListViewAdapter(Context context, List<Bean> list, int... layoutIds) {
@@ -40,12 +35,39 @@ public class ListViewAdapter extends EasyLVAdapter<Bean> {
         else return 0;
     }
 }
+
+// RecyclerView
+public class RecyclerViewAdapter extends EasyRVAdapter<Bean> {
+    public RecyclerViewAdapter(Context context, List<Bean> list, int... layoutIds) {
+        super(context, list, layoutIds);
+    }
+
+    @Override
+    protected void onBindData(EasyRVHolder viewHolder, final int position, Bean item) {
+        viewHolder.setText(R.id.tv, item.name);
+        // 自定义点击可覆盖父类的setOnItemClickListener
+        /*viewHolder.getItemView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext, position+"---", Toast.LENGTH_SHORT).show();
+            }
+        });*/
+        viewHolder.setImageUrl(R.id.iv, "https://img.25pp.com//ppnews/zixun_img/6fc/096/1444271700253231.jpg");
+    }
+
+    @Override
+    public int getLayoutIndex(int position, Bean item) {
+        if (position % 2 == 0)
+            return 0;
+        else return 1;
+    }
+}
 ```
 
 #### step2
 
 ```java
-// 若需要调用adapter.setImageUrl，可以在Application配置全局统一回调，也可Adapter单独重写getImageLoader方法
+// 1、若需要调用adapter.setImageUrl，可以在Application配置全局统一回调
 AdapterImageLoader.init(new AdapterImageLoader.ImageLoader() {
     @Override
     public void loadImage(Context context, String url, ImageView view) {
@@ -54,34 +76,24 @@ AdapterImageLoader.init(new AdapterImageLoader.ImageLoader() {
                 .into(view);
     }
 });
+
+// 2、若adapter需要单独定制ImageLoader，比如placeHolder，则重写该方法，以替换全局初始化的ImageLoader
+@Override
+public AdapterImageLoader.ImageLoader getImageLoader() {
+    return new AdapterImageLoader.ImageLoader() {
+        @Override
+        public void loadImage(Context context, String url, ImageView view) {
+            Glide.with(context)
+                    .load(url)
+                    .override(10, 10)
+                    .into(view);
+        }
+    };
+}
 ```
 
 #### step3
-```java
 
-// 若adapter需要单独定制ImageLoader，比如placeHolder，则重写该方法，以替换全局初始化的ImageLoader
-@Override
-public AdapterImageLoader.ImageLoader getImageLoader() {
-return new AdapterImageLoader.ImageLoader() {
-    @Override
-    public void loadImage(Context context, String url, ImageView view) {
-        Glide.with(context)
-                .load(url)
-                .override(10, 10)
-                .into(view);
-    }
-};
-}
-
-```
-
-AbsListView的Adapter，继承EasyLVAdapter，重写convert方法，完成数据与事件的绑定，并且可以指定多种样式的item布局，通过重写getLayoutIndex方法，来指定position位置的item引用的布局。
-
-EasyLVHolder中封装了很多通用的方法，比如setText/setImageDrawable/setOnClickListener等等。也可直接通过getConvertView取出item布局，或者通过getView(int id)取出某个控件，进行相应操作。
-
-RecyclerView的Adapter，需继承EasyRVAdapter或者BaseRVAdapter(包含点击事件与长按事件：setClick方法)，用法与EasyLVAdapter类似。
-
-### 调用
 ```java
 ListView lv = (ListView) findViewById(R.id.lv);
 lv.setAdapter(new ListViewAdapter(this, list, R.layout.item_list_view_1, R.layout.item_list_view_2));
