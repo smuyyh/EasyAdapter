@@ -15,6 +15,7 @@ import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.yuyh.easyadapter.AdapterImageLoader;
 import com.yuyh.easyadapter.helper.ViewHelper;
 
 public class EasyRVHolder extends RecyclerView.ViewHolder implements ViewHelper.RecyclerView<EasyRVHolder> {
@@ -25,10 +26,13 @@ public class EasyRVHolder extends RecyclerView.ViewHolder implements ViewHelper.
     private int mLayoutId;
     protected Context mContext;
 
-    public EasyRVHolder(Context context, int layoutId, View itemView) {
+    private AdapterImageLoader.ImageLoader mImageLoader;
+
+    public EasyRVHolder(Context context, int layoutId, View itemView, AdapterImageLoader.ImageLoader imageLoader) {
         super(itemView);
         this.mContext = context;
         this.mLayoutId = layoutId;
+        this.mImageLoader = imageLoader;
         mConvertView = itemView;
         mConvertView.setTag(this);
     }
@@ -55,12 +59,12 @@ public class EasyRVHolder extends RecyclerView.ViewHolder implements ViewHelper.
         return mConvertView;
     }
 
-    public EasyRVHolder setOnItemViewClickListener(View.OnClickListener listener){
+    public EasyRVHolder setOnItemViewClickListener(View.OnClickListener listener) {
         mConvertView.setOnClickListener(listener);
         return this;
     }
 
-    public EasyRVHolder setOnItemViewLongClickListener(View.OnLongClickListener listener){
+    public EasyRVHolder setOnItemViewLongClickListener(View.OnLongClickListener listener) {
         mConvertView.setOnLongClickListener(listener);
         return this;
     }
@@ -116,13 +120,18 @@ public class EasyRVHolder extends RecyclerView.ViewHolder implements ViewHelper.
 
     @Override
     public EasyRVHolder setImageDrawableRes(int viewId, int drawableRes) {
-        Drawable drawable = ContextCompat.getDrawable(mContext,drawableRes);
+        Drawable drawable = ContextCompat.getDrawable(mContext, drawableRes);
         return setImageDrawable(viewId, drawable);
     }
 
     @Override
     public EasyRVHolder setImageUrl(int viewId, String imgUrl) {
-        // TODO: Use Glide/Picasso/ImageLoader/Fresco
+        ImageView imageView = getView(viewId);
+        if (mImageLoader != null) {
+            mImageLoader.loadImage(mContext, imgUrl, imageView);
+        } else if (AdapterImageLoader.sImageLoader != null) {
+            AdapterImageLoader.sImageLoader.loadImage(mContext, imgUrl, imageView);
+        }
         return this;
     }
 

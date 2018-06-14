@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.yuyh.easyadapter.AdapterImageLoader;
 import com.yuyh.easyadapter.helper.DataHelper;
 import com.yuyh.library.easyadapter.R;
 
@@ -47,10 +48,10 @@ public abstract class EasyRVAdapter<T> extends RecyclerView.Adapter<EasyRVHolder
     @Override
     public EasyRVHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (mHeaderView != null && viewType == TYPE_HEADER) {
-            return new EasyRVHolder(mContext, headerViewId, mHeaderView);
+            return new EasyRVHolder(mContext, headerViewId, mHeaderView, getImageLoader());
         }
         if (mFooterView != null && viewType == TYPE_FOOTER) {
-            return new EasyRVHolder(mContext, footerViewId, mFooterView);
+            return new EasyRVHolder(mContext, footerViewId, mFooterView, getImageLoader());
         }
         if (viewType < 0 || viewType > layoutIds.length) {
             throw new ArrayIndexOutOfBoundsException("layoutIndex");
@@ -65,7 +66,7 @@ public abstract class EasyRVAdapter<T> extends RecyclerView.Adapter<EasyRVHolder
         }
         EasyRVHolder viewHolder = (EasyRVHolder) view.getTag();
         if (viewHolder == null || viewHolder.getLayoutId() != layoutId) {
-            viewHolder = new EasyRVHolder(mContext, layoutId, view);
+            viewHolder = new EasyRVHolder(mContext, layoutId, view, getImageLoader());
             return viewHolder;
         }
         return viewHolder;
@@ -162,6 +163,15 @@ public abstract class EasyRVAdapter<T> extends RecyclerView.Adapter<EasyRVHolder
      */
     public int getLayoutIndex(int position, T item) {
         return 0;
+    }
+
+    /**
+     * 指定网络图片加载器，不指定则默认用全局注册的
+     *
+     * @return
+     */
+    public AdapterImageLoader.ImageLoader getImageLoader() {
+        return null;
     }
 
     /****

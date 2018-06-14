@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.yuyh.easyadapter.AdapterImageLoader;
 import com.yuyh.easyadapter.helper.DataHelper;
 
 import java.util.List;
@@ -20,8 +21,6 @@ public abstract class EasyLVAdapter<T> extends BaseAdapter implements DataHelper
     protected List<T> mList;
     protected int[] layoutIds;
     protected LayoutInflater mLInflater;
-
-    protected EasyLVHolder holder = new EasyLVHolder();
 
     public EasyLVAdapter(Context context, List<T> list, int... layoutIds) {
         this.mContext = context;
@@ -55,7 +54,7 @@ public abstract class EasyLVAdapter<T> extends BaseAdapter implements DataHelper
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         int layoutId = getViewCheckLayoutId(position);
-        holder = holder.get(mContext, position, convertView, parent, layoutId);
+        EasyLVHolder holder = EasyLVHolder.get(mContext, position, convertView, parent, layoutId, getImageLoader());
         convert(holder, position, mList.get(position));
         return holder.getConvertView(layoutId);
     }
@@ -90,6 +89,15 @@ public abstract class EasyLVAdapter<T> extends BaseAdapter implements DataHelper
      */
     public int getLayoutIndex(int position, T item) {
         return 0;
+    }
+
+    /**
+     * 指定网络图片加载器，不指定则默认用全局注册的
+     *
+     * @return
+     */
+    public AdapterImageLoader.ImageLoader getImageLoader() {
+        return null;
     }
 
     public abstract void convert(EasyLVHolder holder, int position, T t);

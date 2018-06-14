@@ -20,6 +20,7 @@ public class ListViewAdapter extends EasyLVAdapter<Bean> {
     @Override
     public void convert(EasyLVHolder holder, int position, final Bean bean) {
         holder.setText(R.id.tv, bean.name);
+        holder.setImageUrl(R.id.iv, "https://img.25pp.com//ppnews/zixun_img/6fc/096/1444271700253231.jpg");
     }
 
     @Override

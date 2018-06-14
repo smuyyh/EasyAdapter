@@ -15,6 +15,7 @@ import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.yuyh.easyadapter.AdapterImageLoader;
 import com.yuyh.easyadapter.helper.ViewHelper;
 
 /**
@@ -34,11 +35,14 @@ public class EasyLVHolder implements ViewHelper.AbsListView<EasyLVHolder> {
     protected int mLayoutId;
     protected Context mContext;
 
-    protected EasyLVHolder(Context context, int position, ViewGroup parent, int layoutId) {
+    protected AdapterImageLoader.ImageLoader imageLoader;
+
+    protected EasyLVHolder(Context context, int position, ViewGroup parent, int layoutId, AdapterImageLoader.ImageLoader imageLoader) {
         this.mConvertView = mConvertViews.get(layoutId);
         this.mPosition = position;
         this.mContext = context;
         this.mLayoutId = layoutId;
+        this.imageLoader = imageLoader;
         if (mConvertView == null) {
             mConvertView = LayoutInflater.from(context).inflate(layoutId, parent, false);
             mConvertViews.put(layoutId, mConvertView);
@@ -49,21 +53,22 @@ public class EasyLVHolder implements ViewHelper.AbsListView<EasyLVHolder> {
     protected EasyLVHolder() {
     }
 
-    public <BVH extends EasyLVHolder> BVH get(Context context, int position, View convertView, ViewGroup parent, int layoutId) {
+    public static EasyLVHolder get(Context context, int position, View convertView, ViewGroup parent, int layoutId, AdapterImageLoader.ImageLoader imageLoader) {
         if (convertView == null) {
-            return (BVH) new EasyLVHolder(context, position, parent, layoutId);
+            return new EasyLVHolder(context, position, parent, layoutId, imageLoader);
         } else {
             EasyLVHolder holder = (EasyLVHolder) convertView.getTag();
             if (holder.mLayoutId != layoutId) {
-                return (BVH) new EasyLVHolder(context, position, parent, layoutId);
+                return new EasyLVHolder(context, position, parent, layoutId, imageLoader);
             }
             holder.setPosition(position);
-            return (BVH) holder;
+            return holder;
         }
     }
 
     /**
      * 获取item布局
+     *
      * @return
      */
     public View getConvertView() {
@@ -148,7 +153,12 @@ public class EasyLVHolder implements ViewHelper.AbsListView<EasyLVHolder> {
 
     @Override
     public EasyLVHolder setImageUrl(int viewId, String imgUrl) {
-        // TODO: Use Glide/Picasso/ImageLoader/Fresco
+        ImageView imageView = getView(viewId);
+        if (imageLoader != null) {
+            imageLoader.loadImage(mContext, imgUrl, imageView);
+        } else if (AdapterImageLoader.sImageLoader != null) {
+            AdapterImageLoader.sImageLoader.loadImage(mContext, imgUrl, imageView);
+        }
         return this;
     }
 
