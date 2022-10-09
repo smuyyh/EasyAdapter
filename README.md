@@ -3,8 +3,21 @@
 
 ### 添加依赖
 ```
-// 不包含v7和recyclerview的依赖，需自行在项目中引入
-compile 'com.yuyh.easyadapter:library:1.2.0'
+buildscript {
+    repositories {
+        ...
+        maven { url "https://jitpack.io" }
+    }
+    dependencies {
+        ...
+    }
+}
+```
+
+```
+dependencies {
+    implementation 'com.github.smuyyh:EasyAdapter:1.3.0'
+}
 ```
 
 ### 用法
